@@ -38,4 +38,8 @@ public class Position {
 
         return Math.sqrt(Math.pow(drow, 2) + Math.pow(dcol, 2));
     }
+
+    public boolean is(Position position) {
+        return row == position.row && column == position.column;
+    }
 }

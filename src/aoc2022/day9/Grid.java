@@ -1,9 +1,7 @@
 package aoc2022.day9;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class Grid {
     private final List<List<Piece>> list;
@@ -52,7 +50,6 @@ public class Grid {
     public Piece get(int row, int column) {
         return list.get(row).get(column);
     }
-
 
     private void insertRow() {
         list.add(0, new LinkedList<>());
