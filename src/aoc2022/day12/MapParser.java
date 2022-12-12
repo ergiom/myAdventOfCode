@@ -1,5 +1,9 @@
 package aoc2022.day12;
 
+import aoc2022.day12.HeightMap.HeightMap;
+import aoc2022.day12.HeightMap.LinkedHeightMap;
+import aoc2022.day12.HeightMap.Position;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,5 +88,9 @@ public class MapParser {
 
     public HeightMap toHeightMap() {
         return new HeightMap(getMap(), start, stop);
+    }
+
+    public LinkedHeightMap toLinkedHeightMap() {
+        return new LinkedHeightMap(toHeightMap());
     }
 }

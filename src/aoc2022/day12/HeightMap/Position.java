@@ -1,4 +1,4 @@
-package aoc2022.day12;
+package aoc2022.day12.HeightMap;
 
 public class Position {
     public final static Position INVALID;
@@ -9,7 +9,7 @@ public class Position {
         INVALID = new Position(-1, -1);
     }
 
-    Position(int row, int column) {
+    public Position(int row, int column) {
         this.column = column;
         this.row = row;
     }

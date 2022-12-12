@@ -1,11 +1,11 @@
-package aoc2022.day12;
+package aoc2022.day12.HeightMap;
 
 public class HeightMap {
     private final int[][] map;
     private final Position start;
     private final Position end;
 
-    HeightMap(int[][] map, Position start, Position end) {
+    public HeightMap(int[][] map, Position start, Position end) {
         this.map = map;
         this.start = start;
         this.end = end;
@@ -31,5 +31,14 @@ public class HeightMap {
         if (column < 0 || column >= map[0].length) return false;
 
         return true;
+    }
+
+    public int getMapHeight() {
+        return map.length;
+    }
+
+    public int getMapWidth() {
+        if (map.length == 0) throw new RuntimeException();
+        return map[0].length;
     }
 }
