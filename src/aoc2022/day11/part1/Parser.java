@@ -1,5 +1,6 @@
-package aoc2022.day11;
+package aoc2022.day11.part1;
 
+import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -8,7 +9,7 @@ public class Parser {
     List<String> lines;
     List<Integer> noteStarts;
 
-    Parser(List<String> list) {
+    public Parser(List<String> list) {
         lines = list;
         noteStarts = new LinkedList<>();
     }
@@ -48,7 +49,7 @@ public class Parser {
         if (startIndex + 5 >= lines.size()) throw new RuntimeException();
 
         long[] items = getItems(startIndex + 1);
-        UnaryOperator<Long> operation = getOperation(startIndex + 2);
+        UnaryOperator<BigInteger> operation = getOperation(startIndex + 2);
         int test = getTest(startIndex + 3);
 
         return new Monkey(items, operation, test);
@@ -81,22 +82,22 @@ public class Parser {
         return items;
     }
 
-    private UnaryOperator<Long> getOperation(int index) {
+    private UnaryOperator<BigInteger> getOperation(int index) {
         String line = lines.get(index);
 
         String cleanEquation = line.replaceAll("\\s*Operation: new = old ", "");
         if (cleanEquation.matches("\\* old")) {
-            return a -> a * a;
+            return a -> a.multiply(a);
         }
         else if (cleanEquation.matches("\\+ old")) {
-            return a -> 2 * a;
+            return a -> a.add(a);
         }
         else if (cleanEquation.matches("\\* \\d+")) {
             int value = Integer.parseInt(cleanEquation.replaceAll("\\* ", ""));
-            return a -> a * value;
+            return a -> a.multiply(BigInteger.valueOf(value));
         } else if (cleanEquation.matches("\\+ \\d+")) {
             int value = Integer.parseInt(cleanEquation.replaceAll("\\+ ", ""));
-            return a -> a + value;
+            return a -> a.add(BigInteger.valueOf(value));
         }
 
         throw new RuntimeException();

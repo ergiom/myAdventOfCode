@@ -1,22 +1,23 @@
-package aoc2022.day11;
+package aoc2022.day11.part1;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 public class Monkey {
-    List<Long> items;
-    UnaryOperator<Long> operation;
-    int test;
+    List<BigInteger> items;
+    UnaryOperator<BigInteger> operation;
+    BigInteger test;
     Monkey trueMonkey;
     Monkey falseMonkey;
     long examinedItems;
 
-    Monkey(long[] items, UnaryOperator<Long> operation, int test) {
-        this.items = Arrays.stream(items).boxed().collect(Collectors.toList());
+    Monkey(long[] items, UnaryOperator<BigInteger> operation, int test) {
+        this.items = Arrays.stream(items).boxed().map(BigInteger::valueOf).collect(Collectors.toList());
         this.operation = operation;
-        this.test = test;
+        this.test = BigInteger.valueOf(test);
         trueMonkey = null;
         falseMonkey = null;
         examinedItems = 0;
@@ -31,19 +32,19 @@ public class Monkey {
         return examinedItems;
     }
 
-    public void playRound(UnaryOperator<Long> operator) {
+    public void playRound(UnaryOperator<BigInteger> operator) {
         while (items.size() > 0) {
-            long item = items.remove(0);
+            BigInteger item = items.remove(0);
             item = operator.apply(operation.apply(item));
 
-            if (item % test == 0) trueMonkey.add(item);
+            if (item.mod(test).equals(BigInteger.ZERO)) trueMonkey.add(item);
             else falseMonkey.add(item);
 
             examinedItems++;
         }
     }
 
-    private void add(long item) {
+    private void add(BigInteger item) {
         items.add(item);
     }
 }
