@@ -1,4 +1,4 @@
-package aoc2022.day14;
+package aoc2022.day14.CaveMap;
 
 public enum Node {
     AIR(true, '.'), WALL(false, '#'), SAND(false, 'o');

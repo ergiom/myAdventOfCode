@@ -1,52 +1,24 @@
-package aoc2022.day14;
+package aoc2022.day14.CaveMap;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class CaveMap {
-    List<List<Node>> map;
-    Position sandCreator;
-    Node defaultNode;
-    int sandCount;
+public class FlooredCaveMap {
+    private final List<List<Node>> map;
+    private final Position sandCreator;
+    private final Node defaultNode;
+    private int sandCount;
 
-    CaveMap() {
-        map = new LinkedList<>();
-        sandCreator = new Position(0, 500);
-        defaultNode = Node.AIR;
-        sandCount = 0;
-    }
+    public FlooredCaveMap(CaveMapBuilder builder, Position sandCreator, Node defaultNode) {
+        map = builder.getMap();
+        expand(2, 0, Node.AIR);
 
-    public void drawLine(Position start, Position stop, Node value) {
-        if (start.getColumn() == stop.getColumn()) {
-            int column = start.getColumn();
-            int startRow = Math.min(start.getRow(), stop.getRow());
-            int stopRow = Math.max(start.getRow(), stop.getRow());
-
-            drawColumn(column, startRow, stopRow, value);
-        }
-        else if (start.getRow() == stop.getRow()) {
-            int row = start.getRow();
-            int startColumn = Math.min(start.getColumn(), stop.getColumn());
-            int stopColumn = Math.max(start.getColumn(), stop.getColumn());
-
-            drawRow(row, startColumn, stopColumn, value);
-        }
-    }
-
-    private void drawColumn(int column, int from, int to, Node value) {
-        for (int row = from; row <= to; row++) {
-            setPoint(new Position(row, column), value);
-        }
-    }
-
-    private void drawRow(int row, int from, int to, Node value) {
-        for (int column = from; column <= to; column++) {
-            setPoint(new Position(row, column), value);
-        }
+        this.sandCreator = sandCreator;
+        this.defaultNode = defaultNode;
     }
 
     public void setPoint(Position point, Node value) {
-        if (! onMap(point)) {
+        if (!onMap(point)) {
             expand(point.getRow() - getHeight() + 1, point.getColumn() - getWidth() + 1, defaultNode);
         }
 
@@ -54,32 +26,16 @@ public class CaveMap {
     }
 
     public Node getPoint(Position point) {
-        if (! onMap(point)) return null;
+        if (!onMap(point)) return null;
 
         return map.get(point.getRow()).get(point.getColumn());
     }
 
     public void simulate() {
         sandCount = 0;
-        while (true) {
+        while (getPoint(sandCreator) != Node.SAND) {
             Position destination = simulateSandBlock();
-            if (destination == null) break;
 
-            setPoint(destination, Node.SAND);
-            sandCount++;
-        }
-    }
-
-    public void simulateWithFloor() {
-        expand(1, 0, Node.AIR);
-        expand(1, 0, Node.WALL);
-
-        sandCount = 0;
-        while (true) {
-            Position destination = simulateSandBlock();
-            if (destination == sandCreator) break;
-
-            System.out.println(this);
             setPoint(destination, Node.SAND);
             sandCount++;
         }
@@ -104,17 +60,17 @@ public class CaveMap {
         Position right = goRight(position);
 
         if (down == null) return null;
-        else if (! down.equals(position)) {
+        else if (!down.equals(position)) {
             return down;
         }
 
         if (left == null) return null;
-        else if (! left.equals(position)) {
+        else if (!left.equals(position)) {
             return left;
         }
 
         if (right == null) return null;
-        else if (! right.equals(position)) {
+        else if (!right.equals(position)) {
             return right;
         }
 
@@ -123,7 +79,7 @@ public class CaveMap {
 
     private Position goDown(Position position) {
         Position newPosition = new Position(position.getRow() + 1, position.getColumn());
-        if (! onMap(newPosition)) return null;
+        if (!onMap(newPosition)) return null;
 
         Node node = getPoint(newPosition);
         return node.isEmpty() ? newPosition : position;
@@ -131,7 +87,7 @@ public class CaveMap {
 
     private Position goLeft(Position position) {
         Position newPosition = new Position(position.getRow() + 1, position.getColumn() - 1);
-        if (! onMap(newPosition)) return null;
+        if (!onMap(newPosition)) return null;
 
         Node node = getPoint(newPosition);
         return node.isEmpty() ? newPosition : position;
@@ -139,7 +95,9 @@ public class CaveMap {
 
     private Position goRight(Position position) {
         Position newPosition = new Position(position.getRow() + 1, position.getColumn() + 1);
-        if (! onMap(newPosition)) return null;
+        if (newPosition.getColumn() == getWidth())
+            expand(0, 1, defaultNode);
+        if (!onMap(newPosition)) return null;
 
         Node node = getPoint(newPosition);
         return node.isEmpty() ? newPosition : position;
@@ -173,19 +131,25 @@ public class CaveMap {
         }
 
         int width = getWidth();
-        for (List<Node> row: map.subList(0, map.size())) {
+        for (List<Node> row : map.subList(0, map.size() - 1)) {
             while (row.size() < width + columns) {
                 row.add(value);
             }
         }
+
+        List<Node> row = map.get(map.size() - 1);
+        while (row.size() < width + columns) {
+            row.add(Node.WALL);
+        }
+
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        for (List<Node> row: map) {
-            for (Node node: row) {
+        for (List<Node> row : map) {
+            for (Node node : row) {
                 builder.append(node);
             }
             builder.append("\n");

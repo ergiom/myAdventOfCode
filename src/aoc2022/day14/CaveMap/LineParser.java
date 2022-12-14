@@ -1,10 +1,10 @@
-package aoc2022.day14;
+package aoc2022.day14.CaveMap;
 
 import java.util.List;
 
 public class LineParser {
-    public CaveMap parse(List<String> lines) {
-        CaveMap map = new CaveMap();
+    public CaveMapBuilder parse(List<String> lines) {
+        CaveMapBuilder map = new CaveMapBuilder();
         for (String line: lines) {
             String[] strPoints = line.split(" -> ");
             Position[] positions = new Position[strPoints.length];

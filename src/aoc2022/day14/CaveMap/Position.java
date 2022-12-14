@@ -1,10 +1,10 @@
-package aoc2022.day14;
+package aoc2022.day14.CaveMap;
 
 public class Position {
     private final int row;
     private final int column;
 
-    Position(int row, int column) {
+    public Position(int row, int column) {
         this.row = row;
         this.column = column;
     }

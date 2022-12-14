@@ -1,5 +1,7 @@
 package aoc2022.day14;
 
+import aoc2022.day14.CaveMap.*;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,7 +11,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         String fileName = "./src/aoc2022/day14/Slice.txt";
-//        System.out.println("Part 1: " + partOne(fileName));
+        System.out.println("Part 1: " + partOne(fileName));
         System.out.println("Part 2: " + partTwo(fileName));
     }
 
@@ -17,8 +19,9 @@ public class Main {
         List<String> lines = getLines(fileName);
 
         LineParser parser = new LineParser();
-        CaveMap map = parser.parse(lines);
+        SimpleCaveMap map = new SimpleCaveMap(parser.parse(lines),new Position(0, 500), Node.AIR);
         map.simulate();
+//        System.out.println(map);
         return map.getSandNumber();
     }
 
@@ -26,8 +29,9 @@ public class Main {
         List<String> lines = getLines(fileName);
 
         LineParser parser = new LineParser();
-        CaveMap map = parser.parse(lines);
-        map.simulateWithFloor();
+        FlooredCaveMap map = new FlooredCaveMap(parser.parse(lines), new Position(0, 500), Node.AIR);
+        map.simulate();
+//        System.out.println(map);
         return map.getSandNumber();
     }
 
